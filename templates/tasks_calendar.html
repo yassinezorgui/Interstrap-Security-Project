@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Tasks Calendar{% endblock %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h1>Tasks Calendar</h1>
+    </div>
+    <div class="col text-end">
+        <a href="{{ url_for('add_task') }}" class="btn btn-primary">Add New Task</a>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Volet</th>
+                <th>Action</th>
+                <th>Périodicité</th>
+                <th>Responsable</th>
+                <th>Échéance</th>
+                <th>Acteurs Externes</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr {% if task.echeance_prochaine.date() < today %}class="table-danger"{% endif %}>
+                <td>{{ task.volet }}</td>
+                <td>{{ task.action_programmee }}</td>
+                <td>{{ task.periodicite }}</td>
+                <td>{{ task.responsable }}</td>
+                <td>{{ task.echeance_prochaine.strftime('%Y-%m-%d') }}</td>
+                <td>{{ task.acteurs_externes or '-' }}</td>
+                <td>
+                    {% if task.last_completed %}
+                        Last done: {{ task.last_completed.strftime('%Y-%m-%d') }}
+                    {% else %}
+                        Not completed yet
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="POST" action="{{ url_for('complete_task', task_id=task.id) }}" style="display: inline;">
+                        <button type="submit" class="btn btn-success btn-sm">Mark Complete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
