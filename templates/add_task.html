@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Add Task{% endblock %}
+{% block content %}
+<h1>Add Task</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.volet.label }} {{ form.volet(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.action_programmee.label }} {{ form.action_programmee(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.periodicite.label }} {{ form.periodicite(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.responsable.label }} {{ form.responsable(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.echeance_prochaine.label }} {{ form.echeance_prochaine(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.acteurs_externes.label }} {{ form.acteurs_externes(class="form-control") }}
+    </div>
+    <button type="submit" class="btn btn-success">{{ form.submit.label }}</button>
+</form>
+{% endblock %}
