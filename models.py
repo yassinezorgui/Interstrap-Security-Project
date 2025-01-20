@@ -1,6 +1,8 @@
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta
 
 # Initialize SQLAlchemy instance
 db = SQLAlchemy()
@@ -11,6 +13,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)  # Add email
     role = db.Column(db.String(10), nullable=False)
 
 class Task(db.Model):
@@ -24,6 +27,30 @@ class Task(db.Model):
     echeance_prochaine = db.Column(db.DateTime, nullable=False)  # Changed from String to DateTime
     acteurs_externes = db.Column(db.String(200), nullable=True)
     last_completed = db.Column(db.DateTime, nullable=True)
+
+    def calculate_next_due_date(self):
+        """Calculate next due date based on periodicite"""
+        amount, unit = self.periodicite.lower().split()
+        amount = int(amount)
+        
+        today = datetime.now()
+        
+        if 'day' in unit:
+            return today + timedelta(days=amount)
+        elif 'week' in unit:
+            return today + timedelta(weeks=amount)
+        elif 'month' in unit:
+            return today + relativedelta(months=amount)
+        elif 'year' in unit or 'annual' in unit:
+            return today + relativedelta(years=amount)
+        
+        return today
+    
+    def is_due_soon(self, days=7):
+        """Check if task is due within specified days"""
+        if not self.echeance_prochaine:
+            return False
+        return datetime.now() <= self.echeance_prochaine <= datetime.now() + timedelta(days=days)
 
     def complete_task(self):
         """Mark task as complete and calculate next due date"""

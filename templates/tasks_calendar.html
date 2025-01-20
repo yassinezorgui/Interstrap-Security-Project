@@ -9,7 +9,39 @@
         <a href="{{ url_for('add_task') }}" class="btn btn-primary">Add New Task</a>
     </div>
 </div>
-
+<div class="row mb-3">
+    <div class="col-md-12">
+        <form method="GET" class="row g-3">
+            <div class="col-md-3">
+                <input type="text" name="search" class="form-control" placeholder="Search tasks..." value="{{ current_filters.search }}">
+            </div>
+            <div class="col-md-2">
+                <select name="status" class="form-select">
+                    <option value="all" {% if current_filters.status == 'all' %}selected{% endif %}>All Status</option>
+                    <option value="pending" {% if current_filters.status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="completed" {% if current_filters.status == 'completed' %}selected{% endif %}>Completed</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="time_frame" class="form-select">
+                    <option value="all" {% if current_filters.time_frame == 'all' %}selected{% endif %}>All Time</option>
+                    <option value="week" {% if current_filters.time_frame == 'week' %}selected{% endif %}>Next 7 Days</option>
+                    <option value="month" {% if current_filters.time_frame == 'month' %}selected{% endif %}>Next 30 Days</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="sort" class="form-select">
+                    <option value="due_date" {% if current_filters.sort_by == 'due_date' %}selected{% endif %}>Sort by Due Date</option>
+                    <option value="volet" {% if current_filters.sort_by == 'volet' %}selected{% endif %}>Sort by Volet</option>
+                    <option value="responsable" {% if current_filters.sort_by == 'responsable' %}selected{% endif %}>Sort by Responsable</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-secondary">Apply Filters</button>
+            </div>
+        </form>
+    </div>
+</div>
 <div class="table-responsive">
     <table class="table table-bordered">
         <thead>

@@ -1,9 +1,10 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash,request
 from flask_login import login_user, login_required, current_user
 from werkzeug.security import check_password_hash
 from models import User, Task, db
 from forms import LoginForm, TaskForm
-from datetime import datetime
+from datetime import datetime, timedelta
+from sqlalchemy import or_
 
 def register_routes(app):
     """Register all routes with the Flask application"""
@@ -46,11 +47,54 @@ def register_routes(app):
     @app.route('/calendar')
     @login_required
     def tasks_calendar():
-        tasks = Task.query.order_by(Task.echeance_prochaine).all()
-        return render_template('tasks_calendar.html', 
-                                tasks=tasks,
-                                today=datetime.now(),
-                                datetime=datetime)
+        #filter parameters
+        status = request.args.get('status', 'all')
+        sort_by = request.args.get('sort', 'due_date')
+        search = request.args.get('search', '')
+        time_frame = request.args.get('time_frame', 'all')
+
+        #base query
+        query = Task.query
+
+        #apply filters
+        if status == 'completed':
+            query = query.filter(Task.last_completed.isnot(None))
+        elif status == 'pending':
+            query = query.filter(Task.last_completed.is_(None))
+
+        if search:
+            query = query.filter(or_(
+                Task.volet.ilike(f'%{search}%'),
+                Task.action_programmee.ilike(f'%{search}%'),
+                Task.responsable.ilike(f'%{search}%'),
+            ))
+        if time_frame == 'week':
+            query.filter(Task.echeance_prochaine <= datetime.now() + timedelta(days=7))
+        elif time_frame == 'month':
+            query.filter(Task.echeance_prochaine <= datetime.now() + timedelta(days=30))
+
+        #apply sorting
+        if sort_by == 'volet':
+            query = query.order_by(Task.volet)
+        elif sort_by == 'responsable':
+            query = query.order_by(Task.responsable)
+        else:
+            query = query.order_by(Task.echeance_prochaine)
+
+        tasks = query.all()
+
+        return render_template(
+            'tasks_calendar.html',
+            tasks=tasks,
+            today=datetime.now(),
+            datetime=datetime,
+            current_filters={
+                'status': status,
+                'sort_by': sort_by,
+                'search': search,
+                'time_frame': time_frame
+            }
+        )
     
     @app.route('/complete-task/<int:task_id>', methods=['POST'])
     @login_required

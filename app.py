@@ -3,6 +3,8 @@ from flask_login import LoginManager
 from models import db, User
 from werkzeug.security import generate_password_hash
 from config import Config
+from notification import setup_mail
+from scheduler import init_scheduler
 
 def create_app():
     """Application factory function"""
@@ -12,6 +14,8 @@ def create_app():
     
     # Initialize extensions
     db.init_app(app)
+    init_scheduler(app)
+    setup_mail(app)
     
     # Setup Flask-Login
     login_manager = LoginManager()
@@ -36,7 +40,8 @@ def create_app():
             admin_user = User(
                 username='admin',
                 password=generate_password_hash('admin_password'),
-                role='admin'
+                role='admin',
+                email='yassine16kata@gmail.com',
             )
             db.session.add(admin_user)
             db.session.commit()
