@@ -21,7 +21,7 @@ class Task(db.Model):
     action_programmee = db.Column(db.String(200), nullable=False)
     periodicite = db.Column(db.String(50), nullable=False)
     responsable = db.Column(db.String(100), nullable=False)
-    echeance_prochaine = db.Column(db.String(100), nullable=True)
+    echeance_prochaine = db.Column(db.DateTime, nullable=False)  # Changed from String to DateTime
     acteurs_externes = db.Column(db.String(200), nullable=True)
     last_completed = db.Column(db.DateTime, nullable=True)
 

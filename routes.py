@@ -23,11 +23,10 @@ def register_routes(app):
     @app.route('/add-task', methods=['GET', 'POST'])
     @login_required
     def add_task():
-        """Handle task creation (admin only)"""
         if current_user.role != 'admin':
             flash('Access denied. Admins only.', 'danger')
             return redirect(url_for('login'))
-            
+    
         form = TaskForm()
         if form.validate_on_submit():
             task = Task(
@@ -35,13 +34,13 @@ def register_routes(app):
                 action_programmee=form.action_programmee.data,
                 periodicite=form.periodicite.data,
                 responsable=form.responsable.data,
-                echeance_prochaine=form.echeance_prochaine.data,
+                echeance_prochaine=datetime.combine(form.echeance_prochaine.data, datetime.min.time()),  # Convert date to datetime
                 acteurs_externes=form.acteurs_externes.data
             )
             db.session.add(task)
             db.session.commit()
             flash('Task added successfully!', 'success')
-            return redirect(url_for('add_task'))
+            return redirect(url_for('tasks_calendar'))
         return render_template('add_task.html', form=form)
     
     @app.route('/calendar')
@@ -49,8 +48,9 @@ def register_routes(app):
     def tasks_calendar():
         tasks = Task.query.order_by(Task.echeance_prochaine).all()
         return render_template('tasks_calendar.html', 
-                             tasks=tasks,
-                             today=datetime.now().date())
+                                tasks=tasks,
+                                today=datetime.now(),
+                                datetime=datetime)
     
     @app.route('/complete-task/<int:task_id>', methods=['POST'])
     @login_required

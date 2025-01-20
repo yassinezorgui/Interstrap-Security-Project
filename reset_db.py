@@ -1,4 +1,3 @@
-# Create a new file called reset_db.py
 from app import create_app
 from models import db
 
