@@ -44,15 +44,15 @@ This project is a **Task Notification and Management System** built using Flask,
    pip install -r requirements.txt
    ```
 
-4. Configure the environment variables in a `.env` file:
+4. Configure the environment variables in at `notification.py` file:
    ```env
-   FLASK_APP=app.py
-   FLASK_ENV=development
-   MAIL_SERVER=smtp.gmail.com
-   MAIL_PORT=587
-   MAIL_USE_TLS=True
-   MAIL_USERNAME=your-email@gmail.com
-   MAIL_PASSWORD=your-email-password
+def setup_mail(app):
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = 'your-email@gmail.com'  
+    app.config['MAIL_PASSWORD'] = 'your-email-password' 
+    mail.init_app(app)
    ```
 
 5. Initialize the database:
