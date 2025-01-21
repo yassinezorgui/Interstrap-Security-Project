@@ -8,8 +8,8 @@ def setup_mail(app):
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USERNAME'] = 'zorguimohamedyassine@gmail.com'  
-    app.config['MAIL_PASSWORD'] = 'ngxj cwbe vkff nkkk' 
+    app.config['MAIL_USERNAME'] = 'zorguimohamedyassine@gmail.com'  #update the mail to your sender mail and implement it here and at line 31
+    app.config['MAIL_PASSWORD'] = 'your-email-app-password' #genrate app password in google account for this app and implement it here 
     mail.init_app(app)
 
 def send_task_notifications():
