@@ -14,16 +14,14 @@ class TaskForm(FlaskForm):
     action_programmee = StringField('Action programmée', validators=[DataRequired()])
     periodicite = SelectField('Périodicité', 
         choices=[
-            ('7 days', 'Weekly'),
-            ('14 days', 'Bi-weekly'),
-            ('30 days', 'Monthly'),
-            ('90 days', 'Quarterly'),
-            ('180 days', 'Semi-annually'),
-            ('365 days', 'Annually')
+            ('7 days', 'hebdomadaire'),
+            ('30 days', 'Mensuelle'),
+            ('90 days', 'Trimestrielle'),
+            ('180 days', 'Semestrielle'),
+            ('365 days', 'Annuelle')
         ],
         validators=[DataRequired()])
     responsable = StringField('Responsable', validators=[DataRequired()])
     echeance_prochaine = DateField('Echéance Prochaine', validators=[DataRequired()])
     acteurs_externes = StringField('Acteurs externes')
     submit = SubmitField('Add Task')
-# Compare this snippet from config.py:

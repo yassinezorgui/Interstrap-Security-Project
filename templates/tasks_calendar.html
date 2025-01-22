@@ -3,10 +3,10 @@
 {% block content %}
 <div class="row mb-4">
     <div class="col">
-        <h1>Tasks Calendar</h1>
+        <h1>Calendrier des Actions Périodiques</h1>
     </div>
     <div class="col text-end">
-        <a href="{{ url_for('add_task') }}" class="btn btn-primary">Add New Task</a>
+        <a href="{{ url_for('add_task') }}" class="btn btn-primary">Ajout</a>
     </div>
 </div>
 <div class="row mb-3">
@@ -17,27 +17,27 @@
             </div>
             <div class="col-md-2">
                 <select name="status" class="form-select">
-                    <option value="all" {% if current_filters.status == 'all' %}selected{% endif %}>All Status</option>
-                    <option value="pending" {% if current_filters.status == 'pending' %}selected{% endif %}>Pending</option>
-                    <option value="completed" {% if current_filters.status == 'completed' %}selected{% endif %}>Completed</option>
+                    <option value="all" {% if current_filters.status == 'all' %}selected{% endif %}>Tous</option>
+                    <option value="pending" {% if current_filters.status == 'pending' %}selected{% endif %}>Non Faites</option>
+                    <option value="completed" {% if current_filters.status == 'completed' %}selected{% endif %}>Faite</option>
                 </select>
             </div>
             <div class="col-md-2">
                 <select name="time_frame" class="form-select">
-                    <option value="all" {% if current_filters.time_frame == 'all' %}selected{% endif %}>All Time</option>
-                    <option value="week" {% if current_filters.time_frame == 'week' %}selected{% endif %}>Next 7 Days</option>
-                    <option value="month" {% if current_filters.time_frame == 'month' %}selected{% endif %}>Next 30 Days</option>
+                    <option value="all" {% if current_filters.time_frame == 'all' %}selected{% endif %}>Tous</option>
+                    <option value="week" {% if current_filters.time_frame == 'week' %}selected{% endif %}>Semaine Courante</option>
+                    <option value="month" {% if current_filters.time_frame == 'month' %}selected{% endif %}>Mois Courant</option>
                 </select>
             </div>
             <div class="col-md-2">
                 <select name="sort" class="form-select">
-                    <option value="due_date" {% if current_filters.sort_by == 'due_date' %}selected{% endif %}>Sort by Due Date</option>
-                    <option value="volet" {% if current_filters.sort_by == 'volet' %}selected{% endif %}>Sort by Volet</option>
-                    <option value="responsable" {% if current_filters.sort_by == 'responsable' %}selected{% endif %}>Sort by Responsable</option>
+                    <option value="due_date" {% if current_filters.sort_by == 'due_date' %}selected{% endif %}>Echéance Prochaine</option>
+                    <option value="volet" {% if current_filters.sort_by == 'volet' %}selected{% endif %}>Volet</option>
+                    <option value="responsable" {% if current_filters.sort_by == 'responsable' %}selected{% endif %}>Responsable</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-secondary">Apply Filters</button>
+                <button type="submit" class="btn btn-secondary">Filterer</button>
             </div>
         </form>
     </div>
@@ -68,14 +68,14 @@
                 <td>{{ task.acteurs_externes or '-' }}</td>
                 <td>
                     {% if task.last_completed %}
-                        Last done: {{ task.last_completed.strftime('%Y-%m-%d') }}
+                        Faite le: {{ task.last_completed.strftime('%Y-%m-%d') }}
                     {% else %}
-                        Not completed yet
+                        Non Faite
                     {% endif %}
                 </td>
                 <td>
                     <form method="POST" action="{{ url_for('complete_task', task_id=task.id) }}" style="display: inline;">
-                        <button type="submit" class="btn btn-success btn-sm">Mark Complete</button>
+                        <button type="submit" class="btn btn-success btn-sm">Marquer Faite</button>
                     </form>
                 </td>
             </tr>
