@@ -1,8 +1,9 @@
-from app import db
+#execute this script to add users to the database
+from app import db, app
 from models import User
 from werkzeug.security import generate_password_hash
 
-#execute this script to add users to the database
+app.app_context().push()
 while True:
     username = input("Enter username (or 'q' to quit): ")
     if username.lower() == 'q':
@@ -22,7 +23,7 @@ while True:
     try:
         db.session.add(new_user)
         db.session.commit()
-        print(f"User {username} added successfully")
+        print(f"{role} {username} added successfully")
     except Exception as e:
         db.session.rollback()
         print(f"Error adding user: {e}")
